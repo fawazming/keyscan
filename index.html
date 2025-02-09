@@ -370,9 +370,10 @@
     </style>
 </head>
 
-<body class="">
+<body class="" style="padding-top: 100px;">
 
-   <a href="javascript:;" style="padding: 30px 20px; border-radius: 10px; background-color: #2678b6; color: #efefef;" onclick="DemoApp.showScanQrPopup();">showScanQrPopup</a>
+    <a href="javascript:;" style="padding: 30px 20px; border-radius: 10px; background-color: #2678b6; color: #efefef;"
+        onclick="DemoApp.showScanQrPopup();">showScanQrPopup</a>
     <!-- <li><a href="javascript:;" onclick="DemoApp.showScanQrPopup(true);">showScanQrPopup (links only)</a></li> -->
 
 
@@ -921,35 +922,40 @@
                             return true;
                         }
                     } else {
+                        let currentRequest = null;
+
+                        if (currentRequest) {
+                            return;
+                        }
                         // Define the data you want to send
                         const data = {
                             payload: text
                         };
-
-                        // Use the Fetch API to post data
-                        setTimeout(function () {
-                            fetch('https://posttestserver.dev/p/22hh3ka5ttt0a98l/post', {
-                                method: 'POST', // Specify the request method
-                                headers: {
-                                    'Content-Type': 'application/json' // Set the content type to JSON
-                                },
-                                body: JSON.stringify(data) // Convert the data object to a JSON string
+                        currentRequest = fetch('https://posttestserver.dev/p/22hh3ka5ttt0a98l/post', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok ' + response.statusText);
+                                }
+                                return response.json();
                             })
-                                .then(response => {
-                                    if (!response.ok) {
-                                        throw new Error('Network response was not ok ' + response.statusText);
-                                    }
-                                    return response.json(); // Parse the JSON response
-                                })
-                                .then(data => {
-                                    console.log('Success:', data); // Handle the success response
-                                })
-                                .catch((error) => {
-                                    console.error('Error:', error); // Handle any errors
-                                });
+                            .then(data => {
+                                console.log('Success:', data);
+                                currentRequest = null; // Reset the current request after it's complete
+                            })
+                            .catch((error) => {
+                                console.error('Error:', error);
+                                currentRequest = null; // Reset the current request after it's complete
+                            });
 
+                        setTimeout(() => {
+                            DemoApp.showAlert(`Data Recorded ${text}`);
                         }, 50);
-                        DemoApp.showAlert(`Data Recorded ${text}`);
                         return false;
                     }
                 });
