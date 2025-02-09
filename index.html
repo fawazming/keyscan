@@ -372,8 +372,8 @@
 
 <body class="">
 
-    <li><a href="javascript:;" onclick="DemoApp.showScanQrPopup();">showScanQrPopup</a></li>
-    <li><a href="javascript:;" onclick="DemoApp.showScanQrPopup(true);">showScanQrPopup (links only)</a></li>
+   <a href="javascript:;" style="padding: 30px 20px; border-radius: 10px; background-color: #2678b6; color: #efefef;" onclick="DemoApp.showScanQrPopup();">showScanQrPopup</a>
+    <!-- <li><a href="javascript:;" onclick="DemoApp.showScanQrPopup(true);">showScanQrPopup (links only)</a></li> -->
 
 
     <script type="application/javascript">
@@ -907,7 +907,7 @@
             },
             showScanQrPopup: function (linksOnly) {
                 Telegram.WebApp.showScanQrPopup({
-                    text: linksOnly ? 'with any link' : 'for test purposes'
+                    text: linksOnly ? 'with any link' : 'KeyScan your attendance buddy'
                 }, function (text) {
                     if (linksOnly) {
                         const lowerText = text.toString().toLowerCase();
@@ -927,29 +927,30 @@
                         };
 
                         // Use the Fetch API to post data
-                        fetch('https://posttestserver.dev/p/22hh3ka5ttt0a98l/post', {
-                            method: 'POST', // Specify the request method
-                            headers: {
-                                'Content-Type': 'application/json' // Set the content type to JSON
-                            },
-                            body: JSON.stringify(data) // Convert the data object to a JSON string
-                        })
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Network response was not ok ' + response.statusText);
-                                }
-                                return response.json(); // Parse the JSON response
+                        setTimeout(function () {
+                            fetch('https://posttestserver.dev/p/22hh3ka5ttt0a98l/post', {
+                                method: 'POST', // Specify the request method
+                                headers: {
+                                    'Content-Type': 'application/json' // Set the content type to JSON
+                                },
+                                body: JSON.stringify(data) // Convert the data object to a JSON string
                             })
-                            .then(data => {
-                                console.log('Success:', data); // Handle the success response
-                                DemoApp.showAlert(text);
-                                return false;
-                            })
-                            .catch((error) => {
-                                console.error('Error:', error); // Handle any errors
-                            });
-                            DemoApp.showAlert(text);
-                            return false;
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok ' + response.statusText);
+                                    }
+                                    return response.json(); // Parse the JSON response
+                                })
+                                .then(data => {
+                                    console.log('Success:', data); // Handle the success response
+                                })
+                                .catch((error) => {
+                                    console.error('Error:', error); // Handle any errors
+                                });
+
+                        }, 50);
+                        DemoApp.showAlert(`Data Recorded ${text}`);
+                        return false;
                     }
                 });
             },
