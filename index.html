@@ -370,7 +370,7 @@
     </style>
 </head>
 
-<body class="" style="padding-top: 100px;">
+<body class="" style="padding-top: 100px; padding-left: 50px;">
 
     <a href="javascript:;" style="padding: 30px 20px; border-radius: 10px; background-color: #2678b6; color: #efefef;"
         onclick="DemoApp.showScanQrPopup();">showScanQrPopup</a>
@@ -923,10 +923,18 @@
                         }
                     } else {
                         let currentRequest = null;
+                        let currentData = null;
+
 
                         if (currentRequest) {
                             return;
                         }
+                        if (currentData === text) {
+                            return false;
+                        }
+
+                        currentData = text;
+
                         // Define the data you want to send
                         const data = {
                             payload: text
